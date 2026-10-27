@@ -23,6 +23,8 @@
     --card: #F3EDE2;
     --accent: #05403A;
     --accent-dark: #032E29;
+    --gold: #D2942D;
+    --gold-dark: #B87E22;
     --cream: #F3EDE2;
     --panel-w: 460px;
   }
@@ -84,8 +86,10 @@
   /* AR options (mobile) */
   .ar-options { display: flex; flex-direction: column; gap: 10px; }
   .ar-btn { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 14px; width: 100%; padding: 16px 18px; border-radius: 12px; text-decoration: none; font-family: inherit; cursor: pointer; border: 1px solid var(--line); background: var(--card); color: var(--ink); text-align: left; }
-  .ar-btn.primary { background: var(--accent); border-color: var(--accent); color: var(--cream); }
-  .ar-btn.primary:active { background: var(--accent-dark); }
+  .ar-btn.primary { background: var(--gold); border-color: var(--gold); color: var(--ink); }
+  .ar-btn.primary:active { background: var(--gold-dark); border-color: var(--gold-dark); }
+  .ar-btn:not(.primary) { border: 1.5px solid var(--gold); background: transparent; }
+  .ar-btn:not(.primary):active { background: rgba(210,148,45,.12); }
   .ar-btn img.ar-ico { width: 22px; height: 22px; flex: none; }
   .ar-btn .t { display: flex; flex-direction: column; gap: 3px; flex: 1; }
   .ar-btn .t b { font-size: 16px; font-weight: 600; }
@@ -176,7 +180,7 @@
     <!-- Mobile: AR buttons -->
     <div class="ar-options only-mobile">
       <a class="ar-btn primary" id="arQuick" href="#" rel="ar" data-ar-mode="compressed">
-        <img class="ar-ico" alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F3EDE2' stroke-width='1.5' stroke-linejoin='round'%3E%3Cpath d='M12 2.5 20.5 7v10L12 21.5 3.5 17V7z'/%3E%3Cpath d='M3.5 7 12 11.5 20.5 7M12 11.5v10'/%3E%3C/svg%3E">
+        <img class="ar-ico" alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2327221A' stroke-width='1.5' stroke-linejoin='round'%3E%3Cpath d='M12 2.5 20.5 7v10L12 21.5 3.5 17V7z'/%3E%3Cpath d='M3.5 7 12 11.5 20.5 7M12 11.5v10'/%3E%3C/svg%3E">
         <span class="t"><b>View in your room</b><span>Quick load – recommended</span></span>
         <span class="arrow">&rarr;</span>
       </a>
@@ -234,6 +238,10 @@ const MODELS = {
   const loader = document.getElementById('loader');
   const bar = document.getElementById('loaderBar');
   let triedFallback = false;
+  if (window.matchMedia('(max-width: 900px)').matches) {
+    viewer.removeAttribute('auto-rotate');       // no spinning on phones
+    viewer.setAttribute('interaction-prompt', 'none');
+  }
   viewer.src = MODELS.web;
   viewer.addEventListener('progress', (e) => { bar.style.width = Math.round(e.detail.totalProgress * 100) + '%'; });
   viewer.addEventListener('load', () => { loader.classList.add('done'); track('3d_model_loaded'); });
