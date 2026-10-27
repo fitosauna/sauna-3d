@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fitosauna in 3D – See it in your room</title>
+<meta name="description" content="Explore the Fitosauna home sauna in 3D and place it in your room in real size with your phone.">
+<meta property="og:title" content="See the Fitosauna in your room">
+<meta property="og:description" content="Rotate the sauna in 3D, then use your phone to place it in your space in real size.">
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-P8QW4LPF');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.2.0/dist/model-viewer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+<style>
+  :root {
+    --ink: #27221A;
+    --muted: rgba(39,34,26,.62);
+    --line: rgba(39,34,26,.14);
+    --surface: #FCF6EC;
+    --card: #F3EDE2;
+    --accent: #05403A;
+    --accent-dark: #032E29;
+    --cream: #F3EDE2;
+    --panel-w: 460px;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body { margin: 0; background: var(--surface); color: var(--ink); font-family: 'Archivo', sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  p, h1, h2, ol { margin: 0; }
+
+  .page { display: grid; grid-template-columns: 1fr var(--panel-w); min-height: 100vh; min-height: 100dvh; }
+
+  /* ---------- STAGE ---------- */
+  .stage { position: relative; height: 100vh; height: 100dvh; position: sticky; top: 0; overflow: hidden; }
+  .stage-header { position: absolute; top: 0; left: 0; right: 0; z-index: 3; display: flex; align-items: center; justify-content: space-between; padding: 24px clamp(20px,3vw,40px); pointer-events: none; }
+  .stage-header > * { pointer-events: auto; }
+  .logo { display: block; color: var(--ink); text-decoration: none; }
+  .logo svg { height: 16px; width: auto; display: block; }
+  .back-link { font-size: 13px; font-weight: 600; letter-spacing: .02em; text-decoration: none; color: var(--muted); }
+  .back-link:hover { color: var(--accent); }
+
+  model-viewer { width: 100%; height: 100%; background: transparent; --poster-color: transparent; --progress-bar-color: transparent; outline: none; }
+  model-viewer::part(default-progress-bar) { display: none; }
+
+  .loader { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 14px; font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); transition: opacity .4s; }
+  .loader-track { width: 180px; height: 2px; background: var(--line); border-radius: 2px; overflow: hidden; }
+  .loader-bar { height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+  .loader.done { opacity: 0; pointer-events: none; }
+
+  .dims { position: absolute; left: clamp(20px,3vw,40px); bottom: clamp(20px,3vw,36px); z-index: 3; display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip { display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; border: 1px solid var(--line); border-radius: 999px; background: rgba(252,246,236,.82); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); font-size: 13px; font-weight: 500; }
+  .chip b { font-weight: 700; }
+  .chip svg { width: 14px; height: 14px; flex: none; }
+
+  .hint { position: absolute; right: clamp(20px,3vw,40px); bottom: clamp(20px,3vw,36px); z-index: 3; font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+  .hint svg { width: 16px; height: 16px; }
+
+  .fail { position: absolute; inset: 0; z-index: 2; display: none; align-items: center; justify-content: center; text-align: center; padding: 32px; color: var(--muted); font-size: 15px; line-height: 1.5; }
+  .fail.show { display: flex; }
+
+  /* ---------- PANEL ---------- */
+  .panel { border-left: 1px solid var(--line); padding: 40px 40px 32px; display: flex; flex-direction: column; gap: 28px; background: var(--surface); }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-dark); padding-top: 14px; border-top: 1px solid var(--ink); align-self: flex-start; min-width: 60%; }
+  h1 { font-size: clamp(32px, 3.1vw, 46px); font-weight: 500; line-height: 1.06; letter-spacing: -.02em; }
+  .lede { font-size: 16px; line-height: 1.5; color: var(--muted); margin-top: -12px; }
+
+  .steps { list-style: none; padding: 0; display: flex; flex-direction: column; }
+  .steps li { position: relative; display: grid; grid-template-columns: 40px 1fr; gap: 16px; align-items: center; padding: 8px 0; font-size: 16px; line-height: 1.35; }
+  .steps li:not(:last-child)::after { content: ""; position: absolute; left: 20px; top: calc(50% + 20px); height: calc(100% - 40px); width: 1px; background: var(--line); }
+  .steps .num { width: 40px; height: 40px; border: 1px solid var(--line); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .only-mobile { display: none !important; }
+
+  /* QR (desktop) */
+  .qr-card { display: grid; grid-template-columns: 132px 1fr; gap: 20px; align-items: center; padding: 18px; background: var(--card); border-radius: 14px; }
+  .qr-box { width: 132px; height: 132px; background: #fff; border-radius: 8px; padding: 8px; }
+  .qr-box svg, .qr-box img { width: 100%; height: 100%; display: block; }
+  .qr-card h2 { font-size: 17px; font-weight: 600; margin-bottom: 6px; }
+  .qr-card p { font-size: 14px; line-height: 1.45; color: var(--muted); }
+
+  /* AR options (mobile) */
+  .ar-options { display: flex; flex-direction: column; gap: 10px; }
+  .ar-btn { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 14px; width: 100%; padding: 16px 18px; border-radius: 12px; text-decoration: none; font-family: inherit; cursor: pointer; border: 1px solid var(--line); background: var(--card); color: var(--ink); text-align: left; }
+  .ar-btn.primary { background: var(--accent); border-color: var(--accent); color: var(--cream); }
+  .ar-btn.primary:active { background: var(--accent-dark); }
+  .ar-btn img.ar-ico { width: 22px; height: 22px; flex: none; }
+  .ar-btn .t { display: flex; flex-direction: column; gap: 3px; flex: 1; }
+  .ar-btn .t b { font-size: 16px; font-weight: 600; }
+  .ar-btn .t span { font-size: 12.5px; opacity: .75; }
+  .ar-btn .arrow { font-size: 18px; }
+
+  .note { font-size: 12.5px; line-height: 1.5; color: var(--muted); }
+  .note a { color: var(--accent); }
+  .panel-foot { margin-top: auto; padding-top: 20px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 13px; }
+  .panel-foot a { text-decoration: none; font-weight: 600; color: var(--accent); }
+  .panel-foot span { color: var(--muted); }
+
+  /* ---------- MOBILE ---------- */
+  @media (max-width: 900px) {
+    .page { grid-template-columns: 1fr; }
+    .stage { position: relative; height: 62vh; height: 62svh; min-height: 380px; }
+    .stage-header { padding: 18px 16px; }
+    .dims { left: 16px; bottom: 14px; }
+    .hint { display: none; }
+    .panel { border-left: 0; border-top: 1px solid var(--line); padding: 28px 16px 32px; gap: 24px; }
+    h1 { font-size: 32px; }
+    .only-desktop { display: none !important; }
+    .steps.only-mobile { display: flex !important; }
+    .ar-options.only-mobile { display: flex !important; }
+  }
+</style>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P8QW4LPF" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<main class="page">
+  <section class="stage" aria-label="3D model of the Fitosauna">
+    <div class="stage-header">
+      <a class="logo" href="https://fitosauna.com/" aria-label="Fitosauna"><svg style="height:16px;width:auto;display:block" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 357 47"> <g id="surface1"> <path style=" stroke:none;fill-rule:nonzero;fill:currentColor;" d="M 356.75 46.019531 L 349.058594 46.019531 L 334.800781 11.945312 L 320.710938 46.019531 L 318.335938 46.019531 L 337.265625 0.304688 Z M 308.675781 34.3125 L 308.675781 0.636719 L 310.875 0.636719 L 310.875 46.34375 L 279.230469 12.3125 L 279.230469 46.019531 L 277.03125 46.019531 L 277.03125 0.316406 Z M 240.121094 0.636719 L 240.121094 32.359375 C 240.121094 34.777344 240.957031 36.90625 242.550781 38.496094 C 244.519531 40.457031 247.484375 41.511719 250.816406 41.480469 C 253.4375 41.476562 256.101562 40.789062 258.117188 39.300781 C 260.152344 37.800781 261.511719 35.5 261.511719 32.359375 L 261.511719 0.636719 L 263.71875 0.636719 L 263.71875 32.84375 C 263.71875 37.0625 262.210938 40.5 259.5625 42.890625 C 256.90625 45.28125 253.066406 46.65625 248.347656 46.65625 C 243.792969 46.65625 239.996094 45.253906 237.324219 42.84375 C 234.742188 40.511719 233.183594 37.207031 233.023438 33.234375 L 233.011719 32.847656 L 233.011719 0.636719 Z M 225.796875 46.019531 L 218.105469 46.019531 L 203.847656 11.945312 L 189.757812 46.019531 L 187.382812 46.019531 L 206.308594 0.304688 Z M 145.761719 9.371094 C 146.675781 4.804688 151.929688 0 161.910156 0 C 167.664062 0 172.296875 1.25 176.960938 4.058594 L 177.152344 4.171875 L 176.078125 6.011719 L 175.882812 5.898438 L 175.601562 5.730469 C 172.621094 4.011719 167.960938 2.042969 162.226562 2.042969 C 161.285156 2.042969 159.234375 2.128906 157.210938 2.78125 C 155.191406 3.433594 153.113281 4.675781 152.261719 7.046875 C 151.671875 8.65625 151.941406 10.277344 152.910156 11.699219 C 153.867188 13.109375 155.507812 14.3125 157.660156 15.167969 L 157.664062 15.167969 L 169.425781 19.652344 C 176.148438 22.210938 178.863281 25.976562 179.964844 28.636719 C 181.140625 31.472656 181.09375 34.585938 179.835938 37.40625 L 179.835938 37.410156 L 179.832031 37.414062 C 177.976562 41.828125 172.535156 46.65625 162.753906 46.65625 C 155.777344 46.65625 148.976562 43.507812 145.417969 38.6875 L 145.289062 38.515625 L 146.933594 37.132812 L 147.078125 37.3125 L 147.253906 37.523438 C 150.972656 41.925781 156.609375 44.433594 162.753906 44.433594 C 169.125 44.433594 172.703125 41.320312 173.886719 38.292969 C 174.648438 36.355469 174.597656 34.21875 173.75 32.285156 C 172.605469 29.671875 170.1875 27.628906 166.828125 26.328125 L 166.824219 26.328125 L 154.789062 21.8125 C 150.816406 20.253906 148.378906 18.121094 147.023438 15.902344 C 145.667969 13.683594 145.382812 11.355469 145.761719 9.371094 Z M 98.679688 6.855469 C 107.710938 -2.199219 122.40625 -2.148438 131.507812 6.972656 C 140.605469 16.097656 140.652344 30.832031 131.625 39.886719 C 122.59375 48.941406 107.894531 48.894531 98.796875 39.769531 C 89.699219 30.648438 89.648438 15.910156 98.679688 6.855469 Z M 100.355469 8.539062 C 97.199219 11.707031 96.027344 16.226562 96.648438 20.9375 C 97.269531 25.648438 99.675781 30.574219 103.707031 34.617188 C 107.734375 38.65625 112.648438 41.070312 117.347656 41.691406 C 122.046875 42.3125 126.554688 41.140625 129.714844 37.972656 C 132.871094 34.808594 134.042969 30.285156 133.421875 25.574219 C 132.804688 20.863281 130.394531 15.9375 126.363281 11.894531 C 122.335938 7.855469 117.421875 5.441406 112.722656 4.820312 C 108.023438 4.199219 103.515625 5.371094 100.355469 8.539062 Z M 104.09375 12.285156 C 106.289062 10.082031 109.851562 10.082031 112.046875 12.285156 C 114.246094 14.488281 114.246094 18.058594 112.046875 20.261719 C 109.851562 22.464844 106.289062 22.460938 104.09375 20.261719 C 101.898438 18.058594 101.898438 14.488281 104.09375 12.285156 Z M 89.40625 0.636719 L 89.40625 2.808594 L 75.589844 2.808594 L 75.589844 46.019531 L 68.554688 46.019531 L 68.554688 2.808594 L 54.738281 2.808594 L 54.738281 0.636719 Z M 45.1875 0.636719 L 45.1875 46.019531 L 38.1875 46.019531 L 38.1875 0.636719 Z M 29.902344 0.636719 L 29.902344 2.808594 L 7.035156 2.808594 L 7.035156 19.472656 L 27.023438 19.472656 L 27.023438 21.679688 L 7.035156 21.679688 L 7.035156 46.019531 L 0 46.019531 L 0 0.636719 Z M 29.902344 0.636719 "></path> </g> </svg>
+</a>
+      <a class="back-link" href="https://fitosauna.com/products/saunas/">Explore the sauna &rarr;</a>
+    </div>
+
+    <model-viewer id="viewer"
+      alt="Fitosauna round wooden home sauna with the door open"
+      camera-controls
+      auto-rotate auto-rotate-delay="1500" rotation-per-second="18deg"
+      interaction-prompt="auto"
+      touch-action="pan-y"
+      shadow-intensity="1" shadow-softness="0.9"
+      exposure="1.05"
+      environment-image="neutral"
+      camera-orbit="25deg 78deg 115%"
+      min-camera-orbit="auto 20deg auto" max-camera-orbit="auto 95deg auto"
+      loading="eager">
+    </model-viewer>
+
+    <div class="loader" id="loader">
+      <span>Loading 3D model</span>
+      <div class="loader-track"><div class="loader-bar" id="loaderBar"></div></div>
+    </div>
+    <div class="fail" id="fail">The 3D model couldn't load here. Try the “View in your room” option on your phone, or refresh the page.</div>
+
+    <div class="dims">
+      <span class="chip"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1.5 8h13M4 5.5 1.5 8 4 10.5M12 5.5 14.5 8 12 10.5"/></svg>Width <b>78 cm</b></span>
+      <span class="chip"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 1.5v13M5.5 4 8 1.5 10.5 4M5.5 12 8 14.5 10.5 12"/></svg>Height <b>130 cm</b></span>
+    </div>
+    <div class="hint only-desktop"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="4.5" y="1.5" width="7" height="11" rx="3.5"/><path d="M8 4v2.5"/></svg>Drag to rotate · scroll to zoom</div>
+  </section>
+
+  <aside class="panel">
+    <div class="eyebrow">View 3D model</div>
+    <h1>See the sauna in real size in your room</h1>
+    <p class="lede">Rotate it here, then place it where you plan to put it using your phone’s camera.</p>
+
+    <!-- Steps: desktop version -->
+    <ol class="steps only-desktop">
+      <li><span class="num">01</span><span>Take your smartphone and open the camera</span></li>
+      <li><span class="num">02</span><span>Scan the <b>QR code</b> below and open the link</span></li>
+      <li><span class="num">03</span><span>Tap <b>View in your room</b></span></li>
+      <li><span class="num">04</span><span>Point your camera at the place where you plan to install the sauna</span></li>
+      <li><span class="num">05</span><span>Move the phone slowly to see how it fits into your space</span></li>
+    </ol>
+
+    <div class="qr-card only-desktop">
+      <div class="qr-box" id="qr" aria-label="QR code that opens this page on your phone"></div>
+      <div>
+        <h2>Scan with your phone</h2>
+        <p>Works on most modern iPhones and Android phones – no app needed.</p>
+      </div>
+    </div>
+
+    <!-- Mobile: AR buttons -->
+    <div class="ar-options only-mobile">
+      <a class="ar-btn primary" id="arQuick" href="#" rel="ar" data-ar-mode="compressed">
+        <img class="ar-ico" alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F3EDE2' stroke-width='1.5' stroke-linejoin='round'%3E%3Cpath d='M12 2.5 20.5 7v10L12 21.5 3.5 17V7z'/%3E%3Cpath d='M3.5 7 12 11.5 20.5 7M12 11.5v10'/%3E%3C/svg%3E">
+        <span class="t"><b>View in your room</b><span>Quick load – recommended</span></span>
+        <span class="arrow">&rarr;</span>
+      </a>
+      <a class="ar-btn" id="arUltra" href="#" rel="ar" data-ar-mode="ultra-real">
+        <img class="ar-ico" alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2327221A' stroke-width='1.5' stroke-linejoin='round'%3E%3Cpath d='M12 2.5 20.5 7v10L12 21.5 3.5 17V7z'/%3E%3Cpath d='M3.5 7 12 11.5 20.5 7M12 11.5v10'/%3E%3C/svg%3E">
+        <span class="t"><b>View in your room – ultra-real</b><span>Most detail · needs fast internet (~50 MB)</span></span>
+        <span class="arrow">&rarr;</span>
+      </a>
+    </div>
+
+    <ol class="steps only-mobile">
+      <li><span class="num">01</span><span>Tap <b>View in your room</b> above</span></li>
+      <li><span class="num">02</span><span>Point your camera at the floor where you plan to install the sauna</span></li>
+      <li><span class="num">03</span><span>Move the phone slowly to see how it fits into your space</span></li>
+    </ol>
+
+    <p class="note">Colours in 3D/AR may differ slightly from the real product. If AR doesn’t open on your phone, <a href="mailto:info@fitosauna.com">contact us</a> and we’ll send you the 3D model directly.</p>
+
+    <div class="panel-foot">
+      <span>Handmade in Latvia</span>
+      <a href="https://fitosauna.com/products/saunas/">Explore the sauna &rarr;</a>
+    </div>
+  </aside>
+</main>
+
+<script>
+/* ==========================================================
+   MODEL FILES – change these if you move the files.
+   Absolute URLs work from any domain for AR. For the in-page
+   3D viewer, files on another domain need CORS (see README),
+   or put copies in assets/ and use e.g. "assets/sauna-web.glb".
+   ========================================================== */
+const MODELS = {
+  web:          'https://fitosauna.com/wp-content/uploads/2026/05/Sauna-21_12-Medium-texture-max-compressed-open-Android-1-web-2048.glb',
+  webFallback:  'https://fitosauna.com/wp-content/uploads/2026/05/Sauna-21_12-Medium-texture-max-compressed-Android.glb',
+  compressed: {
+    ios:     'https://fitosauna.com/wp-content/uploads/2026/05/Sauna-opt-compressed-3.usdz',
+    android: 'https://fitosauna.com/wp-content/uploads/2026/05/Sauna-21_12-Medium-texture-max-compressed-Android.glb'
+  },
+  ultra: {
+    ios:     'https://fitosauna.com/wp-content/uploads/2026/05/Sauna-full-3.usdz',
+    android: 'https://fitosauna.com/wp-content/uploads/2026/05/Sauna-21_12-Medium-texture-Without-compressed-Android.glb'
+  }
+};
+
+(function () {
+  const abs = (u) => new URL(u, location.href).href;
+  const ua = navigator.userAgent;
+  const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const isAndroid = /Android/i.test(ua);
+
+  /* --- 3D viewer --- */
+  const viewer = document.getElementById('viewer');
+  const loader = document.getElementById('loader');
+  const bar = document.getElementById('loaderBar');
+  let triedFallback = false;
+  viewer.src = MODELS.web;
+  viewer.addEventListener('progress', (e) => { bar.style.width = Math.round(e.detail.totalProgress * 100) + '%'; });
+  viewer.addEventListener('load', () => { loader.classList.add('done'); track('3d_model_loaded'); });
+  viewer.addEventListener('error', () => {
+    if (!triedFallback && MODELS.webFallback) { triedFallback = true; bar.style.width = '0'; viewer.src = MODELS.webFallback; return; }
+    loader.classList.add('done');
+    document.getElementById('fail').classList.add('show');
+  });
+
+  /* --- AR links --- */
+  function sceneViewerUrl(glb) {
+    const fallback = location.href.split('#')[0];
+    return 'intent://arvr.google.com/scene-viewer/1.0?file=' + encodeURIComponent(abs(glb)) +
+      '&mode=ar_preferred&title=' + encodeURIComponent('Fitosauna') +
+      '#Intent;scheme=https;package=com.google.android.googlequicksearchbox;action=android.intent.action.VIEW;' +
+      'S.browser_fallback_url=' + encodeURIComponent(fallback) + ';end;';
+  }
+  function setupAr(el, set, label) {
+    if (isIOS) {
+      el.href = abs(set.ios);           // Safari opens .usdz in AR Quick Look (link needs rel="ar" + an <img> child)
+    } else if (isAndroid) {
+      el.href = sceneViewerUrl(set.android);
+      el.removeAttribute('rel');
+    } else {
+      el.href = '#qr';
+      el.removeAttribute('rel');
+    }
+    el.addEventListener('click', () => track('ar_open', { ar_mode: label, platform: isIOS ? 'ios' : isAndroid ? 'android' : 'other' }));
+  }
+  setupAr(document.getElementById('arQuick'), MODELS.compressed, 'compressed');
+  setupAr(document.getElementById('arUltra'), MODELS.ultra, 'ultra-real');
+
+  /* --- QR code (desktop) --- */
+  const qrBox = document.getElementById('qr');
+  function drawQr() {
+    if (!window.qrcode) return setTimeout(drawQr, 100);
+    const qr = qrcode(0, 'M');
+    qr.addData(location.href.split('#')[0]);
+    qr.make();
+    qrBox.innerHTML = qr.createSvgTag({ cellSize: 4, margin: 0, scalable: true });
+    const svg = qrBox.querySelector('svg');
+    if (svg) svg.querySelectorAll('path').forEach(p => p.setAttribute('fill', '#27221A'));
+  }
+  drawQr();
+
+  /* --- Analytics (goes to GTM dataLayer) --- */
+  function track(event, params) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({ event: event }, params || {}));
+  }
+})();
+</script>
+</body>
+</html>

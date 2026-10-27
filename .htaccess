@@ -1,0 +1,18 @@
+# Correct MIME types for 3D / AR files (needed for iPhone AR Quick Look)
+AddType model/gltf-binary .glb
+AddType model/gltf+json .gltf
+AddType model/vnd.usdz+zip .usdz
+
+# Allow the files to be loaded by viewers on other domains
+<IfModule mod_headers.c>
+  <FilesMatch "\.(glb|gltf|usdz)$">
+    Header set Access-Control-Allow-Origin "*"
+  </FilesMatch>
+</IfModule>
+
+# Cache model files for a week
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType model/gltf-binary "access plus 7 days"
+  ExpiresByType model/vnd.usdz+zip "access plus 7 days"
+</IfModule>
