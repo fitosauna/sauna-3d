@@ -21,8 +21,6 @@
     --line: rgba(39,34,26,.14);
     --surface: #FCF6EC;
     --card: #F3EDE2;
-    --accent: #05403A;
-    --accent-dark: #032E29;
     --gold: #D2942D;
     --gold-dark: #B87E22;
     --cream: #F3EDE2;
@@ -43,14 +41,14 @@
   .logo { display: block; color: var(--ink); text-decoration: none; }
   .logo svg { height: 16px; width: auto; display: block; }
   .back-link { font-size: 13px; font-weight: 600; letter-spacing: .02em; text-decoration: none; color: var(--muted); }
-  .back-link:hover { color: var(--accent); }
+  .back-link:hover { color: var(--ink); }
 
   model-viewer { width: 100%; height: 100%; background: transparent; --poster-color: transparent; --progress-bar-color: transparent; outline: none; }
   model-viewer::part(default-progress-bar) { display: none; }
 
   .loader { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 14px; font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); transition: opacity .4s; }
   .loader-track { width: 180px; height: 2px; background: var(--line); border-radius: 2px; overflow: hidden; }
-  .loader-bar { height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+  .loader-bar { height: 100%; width: 0; background: var(--gold); transition: width .2s; }
   .loader.done { opacity: 0; pointer-events: none; }
 
   .dims { position: absolute; left: clamp(20px,3vw,40px); bottom: clamp(20px,3vw,36px); z-index: 3; display: flex; gap: 8px; flex-wrap: wrap; }
@@ -67,7 +65,7 @@
 
   /* ---------- PANEL ---------- */
   .panel { border-left: 1px solid var(--line); padding: 40px 40px 32px; display: flex; flex-direction: column; gap: 28px; background: var(--surface); }
-  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-dark); padding-top: 14px; border-top: 1px solid var(--ink); align-self: flex-start; min-width: 60%; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink); padding-top: 14px; border-top: 1px solid var(--ink); align-self: flex-start; min-width: 60%; }
   h1 { font-size: clamp(32px, 3.1vw, 46px); font-weight: 500; line-height: 1.06; letter-spacing: -.02em; }
 
   .steps { list-style: none; padding: 0; display: flex; flex-direction: column; }
@@ -95,9 +93,10 @@
   .ar-btn .arrow { font-size: 18px; }
 
   .note { font-size: 12.5px; line-height: 1.5; color: var(--muted); }
-  .note a { color: var(--accent); }
+  .note a { color: var(--ink); font-weight: 600; }
   .panel-foot { margin-top: auto; padding-top: 20px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 13px; }
-  .panel-foot a { text-decoration: none; font-weight: 600; color: var(--accent); }
+  .panel-foot a { text-decoration: none; font-weight: 600; color: var(--ink); }
+  .panel-foot a:hover, .note a:hover { color: var(--gold-dark); }
   .panel-foot span { color: var(--muted); }
 
   /* ---------- Hide Klaviyo pop-ups / teasers (e.g. "Spin & Save") on this page ---------- */
