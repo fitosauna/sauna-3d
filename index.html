@@ -210,8 +210,9 @@
    or put copies in assets/ and use e.g. "assets/sauna-web.glb".
    ========================================================== */
 const MODELS = {
-  web:          'https://fitosauna.com/wp-content/uploads/2026/05/Sauna-21_12-Medium-texture-max-compressed-open-Android-1-web-2048.glb',
-  webFallback:  'https://fitosauna.com/wp-content/uploads/2026/05/Sauna-21_12-Medium-texture-max-compressed-Android.glb',
+  // Tries the copy in this repo first; if it isn't there, falls back to the file on fitosauna.com.
+  web:          'assets/sauna-web.glb',
+  webFallback:  'https://fitosauna.com/wp-content/uploads/2026/05/Sauna-21_12-Medium-texture-max-compressed-open-Android-1-web-2048.glb',
   compressed: {
     ios:     'https://fitosauna.com/wp-content/uploads/2026/05/Sauna-opt-compressed-3.usdz',
     android: 'https://fitosauna.com/wp-content/uploads/2026/05/Sauna-21_12-Medium-texture-max-compressed-Android.glb'

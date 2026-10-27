@@ -20,8 +20,8 @@ The paths are set in the `MODELS` block at the bottom of `index.html`:
 
 | Key | Used for | Current file |
 |---|---|---|
-| `web` | 3D viewer in the browser | `Sauna-21_12-Medium-texture-max-compressed-open-Android-1-web-2048.glb` |
-| `webFallback` | 3D viewer if the first file fails | `Sauna-21_12-Medium-texture-max-compressed-Android.glb` |
+| `web` | 3D viewer in the browser | `assets/sauna-web.glb` (a copy of `Sauna-21_12-Medium-texture-max-compressed-open-Android-1-web-2048.glb`) |
+| `webFallback` | 3D viewer if the local copy is missing | the same file on fitosauna.com |
 | `compressed.ios` | iPhone AR, quick load | `Sauna-opt-compressed-3.usdz` |
 | `compressed.android` | Android AR, quick load | `Sauna-21_12-Medium-texture-max-compressed-Android.glb` |
 | `ultra.ios` | iPhone AR, ultra-real (~49 MB) | `Sauna-full-3.usdz` |
