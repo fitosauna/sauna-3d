@@ -58,8 +58,9 @@
   .chip b { font-weight: 700; }
   .chip svg { width: 14px; height: 14px; flex: none; }
 
-  .hint { position: absolute; right: clamp(20px,3vw,40px); bottom: clamp(20px,3vw,36px); z-index: 3; font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
-  .hint svg { width: 16px; height: 16px; }
+  .hint { position: absolute; right: clamp(20px,3vw,40px); bottom: clamp(20px,3vw,36px); z-index: 3; font-size: 13px; color: var(--ink); padding: 9px 14px; border-radius: 999px; background: rgba(252,246,236,.82); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: flex; align-items: center; gap: 8px; }
+  .hint svg { width: 16px; height: 16px; flex: none; }
+  .hint-m { display: none; }
 
   .fail { position: absolute; inset: 0; z-index: 2; display: none; align-items: center; justify-content: center; text-align: center; padding: 32px; color: var(--muted); font-size: 15px; line-height: 1.5; }
   .fail.show { display: flex; }
@@ -68,7 +69,6 @@
   .panel { border-left: 1px solid var(--line); padding: 40px 40px 32px; display: flex; flex-direction: column; gap: 28px; background: var(--surface); }
   .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-dark); padding-top: 14px; border-top: 1px solid var(--ink); align-self: flex-start; min-width: 60%; }
   h1 { font-size: clamp(32px, 3.1vw, 46px); font-weight: 500; line-height: 1.06; letter-spacing: -.02em; }
-  .lede { font-size: 16px; line-height: 1.5; color: var(--muted); margin-top: -12px; }
 
   .steps { list-style: none; padding: 0; display: flex; flex-direction: column; }
   .steps li { position: relative; display: grid; grid-template-columns: 40px 1fr; gap: 16px; align-items: center; padding: 8px 0; font-size: 16px; line-height: 1.35; }
@@ -88,8 +88,6 @@
   .ar-btn { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 14px; width: 100%; padding: 16px 18px; border-radius: 12px; text-decoration: none; font-family: inherit; cursor: pointer; border: 1px solid var(--line); background: var(--card); color: var(--ink); text-align: left; }
   .ar-btn.primary { background: var(--gold); border-color: var(--gold); color: var(--ink); }
   .ar-btn.primary:active { background: var(--gold-dark); border-color: var(--gold-dark); }
-  .ar-btn:not(.primary) { border: 1.5px solid var(--gold); background: transparent; }
-  .ar-btn:not(.primary):active { background: rgba(210,148,45,.12); }
   .ar-btn img.ar-ico { width: 22px; height: 22px; flex: none; }
   .ar-btn .t { display: flex; flex-direction: column; gap: 3px; flex: 1; }
   .ar-btn .t b { font-size: 16px; font-weight: 600; }
@@ -111,7 +109,9 @@
     .stage { position: relative; height: 62vh; height: 62svh; min-height: 380px; }
     .stage-header { padding: 18px 16px; }
     .dims { left: 16px; bottom: 14px; }
-    .hint { display: none; }
+    .hint { left: 16px; right: auto; top: 56px; bottom: auto; font-size: 12.5px; padding: 0; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; color: var(--muted); }
+    .hint-d { display: none; }
+    .hint-m { display: inline; }
     .panel { border-left: 0; border-top: 1px solid var(--line); padding: 28px 16px 32px; gap: 24px; }
     h1 { font-size: 32px; }
     .only-desktop { display: none !important; }
@@ -155,19 +155,18 @@
       <span class="chip"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1.5 8h13M4 5.5 1.5 8 4 10.5M12 5.5 14.5 8 12 10.5"/></svg>Width <b>78 cm</b></span>
       <span class="chip"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 1.5v13M5.5 4 8 1.5 10.5 4M5.5 12 8 14.5 10.5 12"/></svg>Height <b>130 cm</b></span>
     </div>
-    <div class="hint only-desktop"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="4.5" y="1.5" width="7" height="11" rx="3.5"/><path d="M8 4v2.5"/></svg>Drag to rotate · scroll to zoom</div>
+    <div class="hint"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9"/><path d="M12.2 1.6v2.6H9.6"/></svg><span class="hint-d">Drag to turn the sauna around · scroll to zoom in</span><span class="hint-m">Swipe to turn the sauna around · pinch to zoom in</span></div>
   </section>
 
   <aside class="panel">
     <div class="eyebrow">View 3D model</div>
     <h1>See the sauna in real size in your room</h1>
-    <p class="lede">Rotate it here, then place it where you plan to put it using your phone’s camera.</p>
 
     <!-- Steps: desktop version -->
     <ol class="steps only-desktop">
       <li><span class="num">01</span><span>Take your smartphone and open the camera</span></li>
       <li><span class="num">02</span><span>Scan the <b>QR code</b> below and open the link</span></li>
-      <li><span class="num">03</span><span>Tap <b>View in your room</b></span></li>
+      <li><span class="num">03</span><span>Tap one of the <b>View in your room</b> buttons</span></li>
       <li><span class="num">04</span><span>Point your camera at the place where you plan to install the sauna</span></li>
       <li><span class="num">05</span><span>Move the phone slowly to see how it fits into your space</span></li>
     </ol>
@@ -187,7 +186,7 @@
         <span class="t"><b>View in your room</b><span>Quick load – recommended</span></span>
         <span class="arrow">&rarr;</span>
       </a>
-      <a class="ar-btn" id="arUltra" href="#" rel="ar" data-ar-mode="ultra-real">
+      <a class="ar-btn primary" id="arUltra" href="#" rel="ar" data-ar-mode="ultra-real">
         <img class="ar-ico" alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2327221A' stroke-width='1.5' stroke-linejoin='round'%3E%3Cpath d='M12 2.5 20.5 7v10L12 21.5 3.5 17V7z'/%3E%3Cpath d='M3.5 7 12 11.5 20.5 7M12 11.5v10'/%3E%3C/svg%3E">
         <span class="t"><b>View in your room – ultra-real</b><span>Most detail · needs fast internet (~50 MB)</span></span>
         <span class="arrow">&rarr;</span>
@@ -195,7 +194,7 @@
     </div>
 
     <ol class="steps only-mobile">
-      <li><span class="num">01</span><span>Tap <b>View in your room</b> above</span></li>
+      <li><span class="num">01</span><span>Tap one of the <b>View in your room</b> buttons above. Quick load works best on most phones</span></li>
       <li><span class="num">02</span><span>Point your camera at the floor where you plan to install the sauna</span></li>
       <li><span class="num">03</span><span>Move the phone slowly to see how it fits into your space</span></li>
     </ol>
