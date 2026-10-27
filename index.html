@@ -102,6 +102,9 @@
   .panel-foot a { text-decoration: none; font-weight: 600; color: var(--accent); }
   .panel-foot span { color: var(--muted); }
 
+  /* ---------- Hide Klaviyo pop-ups / teasers (e.g. "Spin & Save") on this page ---------- */
+  [class*="kl-private-reset-css"], .klaviyo-form, [data-testid="POPUP"], [data-testid="FLYOUT"], [data-testid="teaser"] { display: none !important; }
+
   /* ---------- MOBILE ---------- */
   @media (max-width: 900px) {
     .page { grid-template-columns: 1fr; }
@@ -286,6 +289,15 @@ const MODELS = {
     if (svg) svg.querySelectorAll('path').forEach(p => p.setAttribute('fill', '#27221A'));
   }
   drawQr();
+
+  /* --- Remove Klaviyo pop-ups/teasers injected via GTM (backup for the CSS rule) --- */
+  const isKlaviyo = (el) => el.nodeType === 1 && (
+    /kl-private-reset-css|klaviyo-form/.test(el.className || '') ||
+    /^\s*spin\s*(&|and)\s*save/i.test((el.textContent || '').slice(0, 40))
+  );
+  new MutationObserver((muts) => {
+    muts.forEach(m => m.addedNodes.forEach(n => { if (n.parentNode === document.body && isKlaviyo(n)) n.style.setProperty('display', 'none', 'important'); }));
+  }).observe(document.body, { childList: true });
 
   /* --- Analytics (goes to GTM dataLayer) --- */
   function track(event, params) {
